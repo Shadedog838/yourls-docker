@@ -1,11 +1,11 @@
-FROM 1.8-apache
+FROM php:7-apache
 
-WORKDIR /usr/src/app
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY start-apache /usr/local/bin
+RUN a2enmod rewrite
 
-COPY . .
+# Copy application source
+COPY src /var/www/
+RUN chown -R www-data:www-data /var/www
 
-RUN yum -y install httpd
-
-EXPOSE 5000
-
-CMD [“/usr/sbin/httpd”, “-D”, “FOREGROUND”]
+CMD ["start-apache"]
